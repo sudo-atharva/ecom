@@ -51,9 +51,37 @@ export default function CheckoutPage() {
         name: 'TechParts',
         description: 'Electronics Components Store',
         order_id: order.id,
-        handler: function (response: any) {
+        handler: async function (response: any) {
           // Handle successful payment
           console.log('Payment successful:', response);
+          
+          // Prepare order data for Google Sheets
+          const firstName = (document.getElementById('first-name') as HTMLInputElement)?.value || '';
+          const lastName = (document.getElementById('last-name') as HTMLInputElement)?.value || '';
+          
+          const orderData = {
+            id: order.id,
+            customerName: `${firstName} ${lastName}`.trim(),
+            email: 'customer@example.com', // In a real app, get this from user profile
+            total: state.total,
+            status: 'Paid',
+            items: state.items,
+          };
+
+          // Sync order with Google Sheets
+          try {
+            await fetch('/api/orders/sync', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(orderData),
+            });
+          } catch (error) {
+            console.error('Failed to sync order with Google Sheets:', error);
+            // Continue with the flow even if Google Sheets sync fails
+          }
+
           // Clear cart and redirect to success page
           router.push('/checkout/success');
         },
