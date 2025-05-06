@@ -1,4 +1,7 @@
+'use client';
+
 import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import ProductCard from '@/components/products/ProductCard';
 import { Product } from '@/types/product';
 
@@ -46,15 +49,12 @@ const mockProducts: Product[] = [
   // Add more mock products here
 ];
 
-export default function ProductsPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const category = searchParams.category as string | undefined;
-  const sort = searchParams.sort as string | undefined;
-  const minPrice = searchParams.minPrice as string | undefined;
-  const maxPrice = searchParams.maxPrice as string | undefined;
+function ProductList() {
+  const searchParams = useSearchParams();
+  const category = searchParams.get('category');
+  const sort = searchParams.get('sort');
+  const minPrice = searchParams.get('minPrice');
+  const maxPrice = searchParams.get('maxPrice');
 
   // Filter products based on search params
   let filteredProducts = [...mockProducts];
@@ -81,6 +81,16 @@ export default function ProductsPage({
   }
 
   return (
+    <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+      {filteredProducts.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900">Products</h1>
@@ -90,7 +100,7 @@ export default function ProductsPage({
           <div className="flex items-center space-x-4">
             <select
               className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-              defaultValue={sort}
+              defaultValue=""
             >
               <option value="">Sort by</option>
               <option value="price-asc">Price: Low to High</option>
@@ -101,13 +111,9 @@ export default function ProductsPage({
         </div>
 
         {/* Product grid */}
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          <Suspense fallback={<div>Loading products...</div>}>
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </Suspense>
-        </div>
+        <Suspense fallback={<div>Loading products...</div>}>
+          <ProductList />
+        </Suspense>
       </div>
     </div>
   );
