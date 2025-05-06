@@ -1,4 +1,4 @@
-export type ProductType = 'physical' | 'digital';
+export type ProductType = 'physical' | 'digital' | 'Development Board' | 'Component' | 'Kit' | 'Accessory';
 
 export interface Product {
   id: string;
@@ -12,7 +12,7 @@ export interface Product {
   images: string[];
   stock: number;
   specs: {
-    [key: string]: string;
+    [key: string]: string | number;
   };
   digitalContent?: {
     files: {
@@ -28,14 +28,35 @@ export interface Product {
   reviewCount: number;
   sku: string;
   brand: string;
-  weight?: number; // in grams
-  dimensions?: {
+  gst: number;
+  mrp: number;
+  discount: number;
+  weight: number; // in grams
+  dimensions: {
     length: number;
     width: number;
     height: number;
   };
-  shipping?: {
+  shipping: {
     free: boolean;
     price: number;
+    weight?: number;
+    dimensions?: {
+      length: number;
+      width: number;
+      height: number;
+    };
+  };
+  inventory: {
+    currentStock: number;
+    minimumStock: number;
+    reorderPoint: number;
+    reorderQuantity: number;
+    lastRestocked: string;
+    supplier: string;
+    supplierContact: string;
+    batchNumber: string;
+    expiryDate: string | null;
+    location: string;
   };
 } 

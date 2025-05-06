@@ -42,7 +42,7 @@ export default function Home() {
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-gray-600">
                   Quality components, tools, and DIY kits for makers, hobbyists, and professionals.
-                  From microcontrollers to sensors, we've got everything you need for your next project.
+                  From microcontrollers to sensors, we&apos;ve got everything you need for your next project.
                 </p>
                 <div className="mt-10 flex items-center gap-x-6">
                   <Link

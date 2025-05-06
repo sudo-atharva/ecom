@@ -1,21 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import {
-  CurrencyDollarIcon,
-  ShoppingCartIcon,
+  ShoppingBagIcon,
   UserGroupIcon,
-  ChartBarIcon,
+  CurrencyDollarIcon,
   DocumentIcon,
 } from '@heroicons/react/24/outline';
 
 const stats = [
   { name: 'Total Revenue', value: '$45,231.89', icon: CurrencyDollarIcon },
-  { name: 'Total Orders', value: '2,338', icon: ShoppingCartIcon },
+  { name: 'Total Orders', value: '2,338', icon: ShoppingBagIcon },
   { name: 'Total Customers', value: '1,234', icon: UserGroupIcon },
-  { name: 'Conversion Rate', value: '3.2%', icon: ChartBarIcon },
+  { name: 'Conversion Rate', value: '3.2%', icon: ShoppingBagIcon },
 ];
 
 const recentOrders = [
@@ -51,7 +49,7 @@ export default function AdminDashboard() {
             <div className="sm:flex-auto">
               <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
               <p className="mt-2 text-sm text-gray-700">
-                Overview of your store's performance and recent activity.
+                Welcome to your store&apos;s dashboard.
               </p>
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none space-x-4">

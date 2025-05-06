@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
+import "@/styles/globals.css";
 import Header from "@/components/layout/Header";
 import { Toaster } from "react-hot-toast";
 import { CartProvider } from "@/lib/context/CartContext";
@@ -9,12 +9,12 @@ import { AuthProvider } from '@/lib/context/AuthContext';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Naviyantra - Electronics Components & DIY Kits",
-  description: "Your one-stop shop for electronics components, DIY kits, microcontroller boards, sensors, and tools. Quality parts for makers, hobbyists, and professionals.",
+  title: "Naviyantra - Electronics Components Store",
+  description: "Your one-stop shop for electronic components, development boards, and accessories.",
   keywords: "electronics components, DIY kits, Arduino, sensors, microcontroller boards, electronics tools",
   openGraph: {
-    title: "Naviyantra - Electronics Components & DIY Kits",
-    description: "Your one-stop shop for electronics components, DIY kits, microcontroller boards, sensors, and tools.",
+    title: "Naviyantra - Electronics Components Store",
+    description: "Your one-stop shop for electronic components, development boards, and accessories.",
     url: "https://naviyantra.com",
     siteName: "Naviyantra",
     images: [
@@ -40,11 +40,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <CartProvider>
-            <Header />
-            <main className="min-h-screen bg-gray-50">
-              {children}
-            </main>
-            <Toaster position="bottom-right" />
+            <div className="min-h-screen bg-gray-50">
+              <Header />
+              <main>{children}</main>
+              <Toaster position="top-right" />
+            </div>
           </CartProvider>
         </AuthProvider>
       </body>

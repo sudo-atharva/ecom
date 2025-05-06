@@ -24,7 +24,7 @@ export default function CartPage() {
         <div className="mt-12 text-center">
           <h2 className="text-lg font-medium text-gray-900">Your cart is empty</h2>
           <p className="mt-2 text-sm text-gray-500">
-            Looks like you haven't added any items to your cart yet.
+            Looks like you haven&apos;t added any items to your cart yet.
           </p>
           <div className="mt-6">
             <Link

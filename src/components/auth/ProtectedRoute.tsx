@@ -37,7 +37,7 @@ export default function ProtectedRoute({ children, requireAdmin = false }: Prote
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900">Access Denied</h1>
-          <p className="mt-2 text-gray-600">You don't have permission to access this page.</p>
+          <p className="mt-2 text-gray-600">You&apos;re not authorized to access this page.</p>
         </div>
       </div>
     );

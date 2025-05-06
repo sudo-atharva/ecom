@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { appendToSheet, formatOrderData } from '@/lib/google/sheets';
+import { appendSheetData, formatOrderData } from '@/lib/google/sheets';
 
 export async function POST(request: Request) {
   try {
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     }
 
     const formattedData = formatOrderData(order);
-    await appendToSheet(spreadsheetId, range, formattedData);
+    await appendSheetData(spreadsheetId, range, formattedData);
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -19,13 +19,13 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { items } = useCart();
+  const { state } = useCart();
 
   const handleLogout = async () => {
     try {
       await logout();
     } catch (error) {
-      console.error('Error logging out:', error);
+      console.error('Failed to log out:', error);
     }
   };
 
@@ -61,73 +61,69 @@ export default function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-6">
-          <Link href="/cart" className="relative text-sm font-semibold leading-6 text-gray-900">
-            <ShoppingCartIcon className="h-6 w-6" />
-            {items.length > 0 && (
-              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-600 text-xs text-white">
-                {items.length}
+          <Link
+            href="/cart"
+            className="flex items-center text-sm font-semibold leading-6 text-gray-900"
+          >
+            Cart
+            {state.items.length > 0 && (
+              <span className="ml-2 rounded-full bg-indigo-600 px-2 py-1 text-xs font-medium text-white">
+                {state.items.length}
               </span>
             )}
           </Link>
           {user ? (
             <Menu as="div" className="relative">
-              <Menu.Button className="flex items-center text-sm font-semibold leading-6 text-gray-900">
-                <UserIcon className="h-6 w-6" />
+              <Menu.Button className="text-sm font-semibold leading-6 text-gray-900">
+                {user.email}
               </Menu.Button>
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Item>
+                  {({ active }) => (
+                    <Link
+                      href="/profile"
+                      className={`block px-4 py-2 text-sm ${
+                        active ? 'bg-gray-100' : ''
+                      } text-gray-700`}
+                    >
+                      Profile
+                    </Link>
+                  )}
+                </Menu.Item>
+                {user.email === 'admin@naviyantra.com' && (
                   <Menu.Item>
                     {({ active }) => (
                       <Link
-                        href="/profile"
-                        className={`${
+                        href="/admin"
+                        className={`block px-4 py-2 text-sm ${
                           active ? 'bg-gray-100' : ''
-                        } block px-4 py-2 text-sm text-gray-700`}
+                        } text-gray-700`}
                       >
-                        Your Profile
+                        Admin Panel
                       </Link>
                     )}
                   </Menu.Item>
-                  {user.email === 'admin@naviyantra.com' && (
-                    <Menu.Item>
-                      {({ active }) => (
-                        <Link
-                          href="/admin/products"
-                          className={`${
-                            active ? 'bg-gray-100' : ''
-                          } block px-4 py-2 text-sm text-gray-700`}
-                        >
-                          Admin Panel
-                        </Link>
-                      )}
-                    </Menu.Item>
+                )}
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={handleLogout}
+                      className={`block w-full px-4 py-2 text-left text-sm ${
+                        active ? 'bg-gray-100' : ''
+                      } text-gray-700`}
+                    >
+                      Sign out
+                    </button>
                   )}
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        onClick={handleLogout}
-                        className={`${
-                          active ? 'bg-gray-100' : ''
-                        } block w-full px-4 py-2 text-left text-sm text-gray-700`}
-                      >
-                        Sign out
-                      </button>
-                    )}
-                  </Menu.Item>
-                </Menu.Items>
-              </Transition>
+                </Menu.Item>
+              </Menu.Items>
             </Menu>
           ) : (
-            <Link href="/login" className="text-sm font-semibold leading-6 text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
+            <Link
+              href="/login"
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              Log in
             </Link>
           )}
         </div>
@@ -156,8 +152,9 @@ export default function Header() {
                     key={item.name}
                     href={item.href}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 ${
-                      pathname === item.href ? 'text-indigo-600' : 'text-gray-900 hover:bg-gray-50'
-                    }`}
+                      pathname === item.href ? 'text-indigo-600' : 'text-gray-900'
+                    } hover:bg-gray-50`}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.name}
                   </Link>
@@ -167,27 +164,38 @@ export default function Header() {
                 <Link
                   href="/cart"
                   className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
-                  Cart ({items.length})
+                  Cart
+                  {state.items.length > 0 && (
+                    <span className="ml-2 rounded-full bg-indigo-600 px-2 py-1 text-xs font-medium text-white">
+                      {state.items.length}
+                    </span>
+                  )}
                 </Link>
                 {user ? (
                   <>
                     <Link
                       href="/profile"
                       className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                      onClick={() => setMobileMenuOpen(false)}
                     >
-                      Your Profile
+                      Profile
                     </Link>
                     {user.email === 'admin@naviyantra.com' && (
                       <Link
-                        href="/admin/products"
+                        href="/admin"
                         className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
                       >
                         Admin Panel
                       </Link>
                     )}
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
                       className="-mx-3 block w-full rounded-lg px-3 py-2.5 text-left text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
                     >
                       Sign out
@@ -197,6 +205,7 @@ export default function Header() {
                   <Link
                     href="/login"
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Log in
                   </Link>

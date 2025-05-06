@@ -12,16 +12,16 @@ const mockProducts: Product[] = [
     name: 'Arduino Uno R3',
     description: 'The Arduino Uno is a microcontroller board based on the ATmega328P.',
     price: 699,
-    type: 'physical',
+    type: 'Development Board',
     category: 'microcontrollers',
     tags: ['arduino', 'microcontroller', 'beginner'],
-    images: ['/images/products/arduino-uno.jpg'],
+    images: ['/images/products/arduino-uno-1.jpg'],
     stock: 50,
     specs: {
       'Microcontroller': 'ATmega328P',
       'Operating Voltage': '5V',
       'Input Voltage': '7-12V',
-      'Digital I/O Pins': '14 (of which 6 provide PWM output)',
+      'Digital I/O Pins': '14',
       'Analog Input Pins': '6',
       'Flash Memory': '32 KB',
       'SRAM': '2 KB',
@@ -35,6 +35,9 @@ const mockProducts: Product[] = [
     reviewCount: 128,
     sku: 'ARDUINO-UNO-R3',
     brand: 'Arduino',
+    gst: 18,
+    mrp: 799,
+    discount: 12.5,
     weight: 25,
     dimensions: {
       length: 68.6,
@@ -43,7 +46,25 @@ const mockProducts: Product[] = [
     },
     shipping: {
       free: false,
-      price: 49
+      price: 49,
+      weight: 25,
+      dimensions: {
+        length: 68.6,
+        width: 53.4,
+        height: 6.8
+      }
+    },
+    inventory: {
+      currentStock: 50,
+      minimumStock: 10,
+      reorderPoint: 20,
+      reorderQuantity: 50,
+      lastRestocked: new Date().toISOString(),
+      supplier: 'Arduino Official',
+      supplierContact: 'supplier@arduino.cc',
+      batchNumber: 'BATCH-2024-001',
+      expiryDate: null,
+      location: 'Warehouse A'
     }
   },
   // Add more mock products here

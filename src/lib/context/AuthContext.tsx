@@ -1,29 +1,40 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  getAuth, 
-  onAuthStateChanged, 
+import {
+  User,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
-  User
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  updateProfile,
+  updateEmail,
+  updatePassword,
 } from 'firebase/auth';
+import { auth } from '../firebase/config';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  updateUserProfile: (displayName: string) => Promise<void>;
+  updateUserEmail: (email: string) => Promise<void>;
+  updateUserPassword: (password: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const auth = getAuth();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -31,47 +42,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, [auth]);
+    return unsubscribe;
+  }, []);
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error('Error signing in:', error);
-      throw error;
-    }
+  const signup = async (email: string, password: string, name: string) => {
+    const { user } = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(user, { displayName: name });
   };
 
-  const signUp = async (email: string, password: string) => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-      console.error('Error signing up:', error);
-      throw error;
-    }
+  const login = async (email: string, password: string) => {
+    await signInWithEmailAndPassword(auth, email, password);
   };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
-    }
+    await signOut(auth);
+  };
+
+  const resetPassword = async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  };
+
+  const updateUserProfile = async (displayName: string) => {
+    if (!user) throw new Error('No user logged in');
+    await updateProfile(user, { displayName });
+  };
+
+  const updateUserEmail = async (email: string) => {
+    if (!user) throw new Error('No user logged in');
+    await updateEmail(user, email);
+  };
+
+  const updateUserPassword = async (password: string) => {
+    if (!user) throw new Error('No user logged in');
+    await updatePassword(user, password);
+  };
+
+  const value = {
+    user,
+    loading,
+    signup,
+    login,
+    logout,
+    resetPassword,
+    updateUserProfile,
+    updateUserEmail,
+    updateUserPassword,
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signUp, logout }}>
-      {children}
+    <AuthContext.Provider value={value}>
+      {!loading && children}
     </AuthContext.Provider>
   );
-}
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}; 
+} 

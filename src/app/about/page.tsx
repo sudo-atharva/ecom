@@ -103,6 +103,13 @@ export default function AboutPage() {
             </div>
           </div>
         </div>
+
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-gray-900 text-center">Our Commitment</h2>
+          <p className="mt-4 text-lg text-gray-500">
+            We&apos;re committed to providing the best service to our customers.
+          </p>
+        </div>
       </div>
     </div>
   );
